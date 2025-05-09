@@ -1,47 +1,3 @@
-# 综合实验1
-
-| 学号     | 姓名   | 分工 |
-| -------- | ------ | ---- |
-| 23336047 | 陈奕航 |      |
-|          |        |      |
-|          |        |      |
-|          |        |      |
-
-## 一、问题描述
-
-对于一段语音信号，我们要进行如下操作：
-
-1. 画出语音信号的时域波形和频谱图；、
-2. 给原始语音信号加噪声，画出加噪声后的语音信号和频谱图；
-3. 设计一个频域的理想带通信道；
-4. 对加噪声后的语音信号进行幅度调制，画出调制后的语音信号和频谱图；
-5. 利用理想带通信道对信号进行传输；
-6. 对接收到的信号进行解调，画出解调后的语音信号和频谱图；
-7. 设计性能良好的滤波器对信号进行滤波；
-8. 对滤波后的语音信号进行回放，并与原始语音进行对比。
-
-## 二、问题分析与解决思路
-
-### 画出语音信号的时域波形和频域图
-
-**这里我们采用 `python`的 `pydub`(需要配置ffmpeg)库对 `m4a`格式的音频信号进行读取分析，此外还需要numpy、matplot**
-
-1. 定义一个 `load_audio`函数读取音频信号，获得音频的时域信号 `samples`和采样率 `sr`
-2. 定义一个 `plot_time_domain`函数负责画出时域特征图像
-3. 定义一个 `plot_spectrum`函数负责画出频域图
-4. 在主函数实现上述函数的调用并获得图像
-
-### 给原始语音信号加噪声并画出图像
-
-1. 我们定义一个较为常见的高斯白噪声函数 `add_white_noise`，参数为原信号和信噪比 `dB`，返回处理后的信号与噪声
-2. 为了后续方便对信号进行调制与滤波，信噪比选择15(中等信噪比：噪声明显但不会严重干扰信号识别)
-3. 在主函数中调用 `plot_time_domain`和 `plot_spectrum`画出添加噪声后的时域图和频域图
-
-## 三、实验代码
-
-### 1&2
-
-```
 import numpy as np
 import matplotlib.pyplot as plt
 from pydub import AudioSegment
@@ -98,16 +54,16 @@ def add_white_noise(signal, snr_db):
     """
     # 计算信号功率
     signal_power = np.mean(signal**2)
-  
+    
     # 根据SNR计算噪声功率
     noise_power = signal_power / (10**(snr_db/10))
-  
+    
     # 生成高斯白噪声
     noise = np.random.normal(-np.sqrt(noise_power)/2, np.sqrt(noise_power)/2, len(signal))
-  
+    
     # 添加噪声到信号
     noisy_signal = signal + noise
-  
+    
     return noisy_signal, noise
  
 def add_sinusoidal_noise(signal, sr, freq, amplitude):
@@ -120,13 +76,13 @@ def add_sinusoidal_noise(signal, sr, freq, amplitude):
     """
     # 创建时间向量
     t = np.arange(0, len(signal)) / sr
-  
+    
     # 生成正弦噪声
     noise = amplitude * np.sin(2 * np.pi * freq * t)
-  
+    
     # 添加噪声到信号
     noisy_signal = signal + noise
-  
+    
     return noisy_signal, noise
 
 if __name__ == "__main__":
@@ -137,11 +93,11 @@ if __name__ == "__main__":
     plt.rcParams['axes.unicode_minus'] = False  # 显示负号
     plt.subplots(2, 2, figsize=(14, 8), dpi=100)
     plt.subplots_adjust(wspace = 0.4, hspace = 0.4)
-  
+    
     # 绘制时域特征
     plt.subplot(221)
     plot_time_domain(samples, sr, "语音信号波形图")
-  
+    
     # 绘制频域图
     plt.subplot(222)
     plot_spectrum(samples, sr, "原始信号频谱图")
@@ -160,15 +116,3 @@ if __name__ == "__main__":
     plt.savefig("原始信号与噪声信号.png")
     plt.show()
 
-
-```
-
-## 四、实验结果
-
-![1746806702534](image/实验报告/1746806702534.png)
-
-## 五、结论
-
-## 六、收获与感想
-
-## 七、创新点
